@@ -157,7 +157,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SITE_ID = os.environ.get("ALLAUTH_SITE_ID")
+SITE_ID = os.environ.get("ALLAUTH_SITE_ID", 3)
 
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
@@ -171,3 +171,4 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 LOGIN_REDIRECT_URL="/"
+CSRF_TRUSTED_ORIGINS=[os.environ.get("CSRF_TRUSTED_ORIGIN", "http://localhost")]
