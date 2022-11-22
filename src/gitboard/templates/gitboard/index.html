@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +13,8 @@
   </head>
   <body>
     <main>
-        <h1>Welcome to Git Board</h1>  
+        <h1>Welcome {{user}} to Git Board</h1>  
+        <a href="{% provider_login_url "github" method="oauth2"  %}">Login to github</a>
     </main>
 	<script src="{% static 'index.js'%}"></script>
   </body>
