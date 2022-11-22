@@ -74,13 +74,29 @@ WSGI_APPLICATION = 'src.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+# https://docs.djangoproject.com/en/4.1/ref/settings/#databaskces
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+db_name = os.environ['AZURE_POSTGRESQL_NAME']
+db_host = os.environ['AZURE_POSTGRESQL_HOST']
+db_user = os.environ['AZURE_POSTGRESQL_USER']
+db_password = os.environ['AZURE_POSTGRESQL_PASSWORD']
+
+# Configure Postgres database, for connection string
+DATABASES = {                                                                    
+    'default': {                                                                 
+        'ENGINE': 'django.db.backends.postgresql',                               
+        'NAME': db_name,                                        
+        'HOST': db_host,                                            
+        'USER': db_user,                                            
+        'PASSWORD': db_password                                         
+    }                                                                            
 }
 
 
