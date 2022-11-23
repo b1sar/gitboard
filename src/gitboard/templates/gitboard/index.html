@@ -1,19 +1,44 @@
+{% extends 'gitboard/base.html' %}
 {% load static %}
+{% load socialaccount %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Git Board</title>
-    <link rel="stylesheet" href="{% static './style.css' %}">
-    <link rel="icon" href="{% url 'favicon' %}" type="image/x-icon">
-  </head>
-  <body>
-    <main>
-        <h1>Welcome to Git Board</h1>  
-    </main>
-	<script src="{% static 'index.js'%}"></script>
-  </body>
-</html>
+
+{% block title %}GitBoard{% endblock title %}
+
+
+{% block content %}
+   
+<div class="container-md mt-2">
+  {% if request.user.is_authenticated %}
+  <main>
+      {% include 'gitboard/dashboard.html' with avatar_url=avatar_url name=name location=location email=email public_repos=public_repos private_repos=private_repos repos_url=repos_url login=login num_of_repos=num_of_repos repo_list=repo_list num_of_pages=num_of_pages %}
+  </main>
+  {% else %}
+  <div class="d-flex flex-column justify-content-center">
+    <img src="{% static 'images/welcome.png' %}" alt="">
+    <p class="text-center">Please login to GitHub to see your stats</p>
+    <a class="btn btn-primary" href="{% provider_login_url "github" method="oauth2"  %}">Login to github</a>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock content %}
+
+{% block js %}
+<script>
+  function closeModal() {
+    var container = document.getElementById("modals-here")
+    var backdrop = document.getElementById("modal-backdrop")
+    var modal = document.getElementById("modal")
+  
+    modal.classList.remove("show")
+    backdrop.classList.remove("show")
+  
+    setTimeout(function() {
+      container.removeChild(backdrop)
+      container.removeChild(modal)
+    }, 200)
+  }
+  
+</script>
+{% endblock js %}
