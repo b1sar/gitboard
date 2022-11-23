@@ -1,0 +1,54 @@
+:root {
+    --primary: #563d7c !important;
+    --secondary: #6c63ff !important
+}
+
+.btn-custom {
+    background: var(--secondary);
+}
+
+.gitboard-primary {
+    background: var(--primary);
+}
+
+.an-image {
+    width: 50%;
+    height: 50%;
+}
+
+.profile-photo {
+    border-radius: 90%;
+    max-width: 5em;
+    max-height: 5em;
+}
+
+.avatar {
+    background-color: var(--color-avatar-bg);
+    border-radius: 50% !important;
+    box-shadow: 0 0 0 1px var(--color-avatar-border);
+    display: inline-block;
+    flex-shrink: 0;
+    line-height: 1;
+    overflow: hidden;
+    vertical-align: middle;
+
+}
+
+
+.username {
+    color:gray;
+}
+
+.info-box {
+    margin-bottom: 2rem;
+}
+
+.location-text {
+    line-height: 0.99rem;
+    font-size: small;
+}
+
+.repositories > li {
+    list-style: none;
+    margin-bottom: 0.4rem;
+}
