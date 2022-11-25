@@ -17,7 +17,7 @@
   <div class="d-flex flex-column justify-content-center">
     <img src="{% static 'images/welcome.png' %}" alt="">
     <p class="text-center">Please login to GitHub to see your stats</p>
-    <a class="btn btn-primary" href="{% provider_login_url "github" method="oauth2"  %}">Login to github</a>
+    <a class="btn btn-primary mx-auto" href="{% provider_login_url "github" method="oauth2"  %}">Login</a>
   </div>
   {% endif %}
 </div>

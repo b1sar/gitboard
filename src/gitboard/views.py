@@ -8,16 +8,22 @@ from django.views.decorators.http import require_GET
 
 from allauth.socialaccount.models import SocialAccount
 
+
+GITHUB_API_REPOS_URL = "https://api.github.com/repos/"
+
+
 @require_GET
 @cache_control(max_age=60 * 60 * 24, immutable=True, public=True)  # one day
 def favicon(request: HttpRequest) -> HttpResponse:
     file = (settings.BASE_DIR / "static" / "favicon.ico").open("rb")
     return FileResponse(file)
 
+
 def index(request, *args, **kwargs):
     account:SocialAccount = None
     try:
         account:SocialAccount = SocialAccount.objects.get(user=request.user)
+        print(request.user)
     except Exception as ex:
         print(ex)
         return render(request, "gitboard/index.html", {})
@@ -46,17 +52,18 @@ def index(request, *args, **kwargs):
 
 
 def modal(request, name, *args, **kwargs):
-    repo_data = get_repo(name)
+    repo_data = get_repo(request, name)
     context = {
         "repo_data": repo_data
     }
     return render(request, "gitboard/hx/modal.html", context)
 
-def get_repo(name):
-    response = requests.get("https://api.github.com/repos/b1sar/" + name)
+
+def get_repo(request, name):
+    response = requests.get(GITHUB_API_REPOS_URL + request.user.username + "/" + name)
     data = response.json()
-    print(data)
     return data
+
 
 def get_repos(repos_url):
     response = requests.get(repos_url)
