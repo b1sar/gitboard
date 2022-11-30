@@ -60,6 +60,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -178,3 +179,6 @@ SOCIALACCOUNT_STORE_TOKENS=True
 
 LOGIN_REDIRECT_URL="/"
 CSRF_TRUSTED_ORIGINS=[os.environ.get("CSRF_TRUSTED_ORIGIN", "http://localhost")]
+
+# whitenoise
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
