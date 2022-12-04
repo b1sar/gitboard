@@ -9,9 +9,11 @@
 {% block content %}
    
 <div class="container-md mt-2">
+  {{cached}}
+  {{last_page}}
   {% if request.user.is_authenticated %}
   <main>
-      {% include 'gitboard/dashboard.html' with avatar_url=avatar_url name=name location=location email=email public_repos=public_repos private_repos=private_repos repos_url=repos_url login=login num_of_repos=num_of_repos repo_list=repo_list num_of_pages=num_of_pages %}
+      {% include 'gitboard/dashboard.html' with navigation=navigation repos_url=repos_url repo_list=repo_list num_of_pages=num_of_pages links=links %}
   </main>
   {% else %}
   <div class="d-flex flex-column justify-content-center">
