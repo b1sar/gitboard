@@ -1,15 +1,13 @@
-import requests
-
 from django.conf import settings
-from django.shortcuts import render
-from django.http import FileResponse, HttpRequest, HttpResponse
-from django.views.decorators.cache import cache_control
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET
+from django.contrib.auth.models import AnonymousUser
+from django.views.decorators.cache import cache_control
+from django.http import FileResponse, HttpRequest, HttpResponse
 
-from allauth.socialaccount.models import SocialAccount
+from allauth.socialaccount.models import SocialToken
 
-
-GITHUB_API_REPOS_URL = "https://api.github.com/repos/"
+from gitboard.github_client.github_client import GithubClient
 
 
 @require_GET
@@ -20,59 +18,40 @@ def favicon(request: HttpRequest) -> HttpResponse:
 
 
 def index(request, *args, **kwargs):
-    account:SocialAccount = None
-    try:
-        account:SocialAccount = SocialAccount.objects.get(user=request.user)
-        print(request.user)
-    except Exception as ex:
-        print(ex)
-        return render(request, "gitboard/index.html", {})
-    
-    data = account.extra_data
-    repos_url = account.extra_data['repos_url']
-    repo_list = get_repos(repos_url)
-    num_of_pages = 1 if len(repo_list) <=5 else len(repo_list)//5
+    # if user is not logged in return to login page
+    if not request.user.is_authenticated:
+        request.session.flush()
+        return redirect("github_login")
+
+    token = None
+    token_cache_key = f"{request.user}-token"
+    token_is_cached = token_cache_key in request.session
+    if token_is_cached:
+        token = request.session.get(token_cache_key)
+    else:
+        tokens = SocialToken.objects.filter(account__user=request.user)
+        # handle the case where the logged in user is admin and does not have a token
+        if tokens.count() <= 0:
+            request.session.flush()
+            return redirect("github_login")
+        token = tokens.first().token
+        request.session[token_cache_key] = token
+
+    github = GithubClient(request.user, token)
+    github.set_pagination_params(request)
 
     context = {
-        "avatar_url": data['avatar_url'],
-        "name": data['name'],
-        "location": data['location'],
-        "email": data['email'],
-        "public_repos": data['public_repos'],
-        "private_repos": data['owned_private_repos'],
-        "repos_url": repos_url,
-        "login": data['login'],
-        "repo_list": repo_list,
-        "num_of_repos": len(repo_list),
-        "num_of_pages": num_of_pages,
+        "repo_list": github.get_repos(),
+        "github_user": github.get_user(),
+        "navigation": github.get_navigation()
     }
-
-    rendered = render(request, "gitboard/index.html", context)
-    return rendered
+    return render(request, "gitboard/index.html", context)
 
 
 def modal(request, name, *args, **kwargs):
-    repo_data = get_repo(request, name)
+    token = request.session[f"{request.user}-token"]
+    git = GithubClient(user=request.user, token=token)
     context = {
-        "repo_data": repo_data
+        "repo_data": git.get_repo(name)
     }
     return render(request, "gitboard/hx/modal.html", context)
-
-
-def get_repo(request, name):
-    response = requests.get(GITHUB_API_REPOS_URL + request.user.username + "/" + name)
-    data = response.json()
-    return data
-
-
-def get_repos(repos_url):
-    response = requests.get(repos_url)
-    data = response.json()
-    repo_list = []
-    for entry in data:
-        repo = {}
-        repo['name'] = entry['name']
-        repo['language'] = entry['language']
-        repo['url'] = entry['url']
-        repo_list.append(repo)
-    return repo_list
