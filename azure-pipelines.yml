@@ -7,9 +7,6 @@ trigger:
 - main
 
 variables:
-- group: gitboard-kv-common-variables
-- group: gitboard-common-vg
-
 - name: azureServiceConnectionId
   value: 'gitboard-sc'
   
