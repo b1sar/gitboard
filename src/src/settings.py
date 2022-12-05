@@ -93,12 +93,7 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databaskces
 
-# DATABASES = {                                                                    
-#     'default': {                                                                 
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }                                                                            
-# }
+
 
 db_name = os.environ['AZURE_POSTGRESQL_NAME']
 db_host = os.environ['AZURE_POSTGRESQL_HOST']
@@ -116,6 +111,12 @@ DATABASES = {
     }                                                                            
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': os.environ.get("AZURE_REDIS_LOCATION")
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
