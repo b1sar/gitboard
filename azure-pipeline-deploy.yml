@@ -5,6 +5,7 @@
 
 variables:
 - group: gitboard-kv-common-variables
+- group: gitboard-common-vg
 
 trigger:
 - main
