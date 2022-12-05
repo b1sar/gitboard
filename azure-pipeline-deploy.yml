@@ -17,8 +17,6 @@ pool:
 stages:
   - stage: Deploy
     displayName: 'Deploy Web App'
-    dependsOn: Build
-    condition: succeeded()
     jobs:
     - deployment: DeploymentJob
       pool:
