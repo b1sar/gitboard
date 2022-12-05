@@ -6,6 +6,8 @@
 trigger:
 - main
 
+pr: none
+
 variables:
 - group: gitboard-common-vg
 
