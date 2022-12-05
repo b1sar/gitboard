@@ -11,7 +11,7 @@ variables:
 - group: gitboard-common-vg
 
 - name: azureServiceConnectionId
-  value: $(azureServiceConnectionId)
+  value: $(azureSubscriptionId)
   
 - name: webAppName
   value: 'gitboard'
