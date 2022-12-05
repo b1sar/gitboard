@@ -14,32 +14,30 @@ pr: none
 pool:
   vmImage: ubuntu-latest
 
-stages:
-  - stage: Deploy
-    displayName: 'Deploy Web App'
-    jobs:
-    - deployment: DeploymentJob
-      pool:
-        vmImage: $(vmImageName)
-      environment: $(environmentName)
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-            - task: AzureKeyVault@2
-              inputs:
-                KeyVaultName: 'gitboard-kv'
-                SecretsFilter: '*'
-                RunAsPreJob: true
-                azureSubscription: 'gitboard-service-connection'
-            - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '$(pythonVersion)'
-              displayName: 'Use Python version'
 
-            - task: AzureWebApp@1
-              displayName: 'Deploy Azure Web App : gitboard'
-              inputs:
-                azureSubscription: 'gitboard-service-connection'
-                appName: $(webAppName)
-                package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+jobs:
+- deployment: DeploymentJob
+  pool:
+    vmImage: $(vmImageName)
+  environment: $(environmentName)
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - task: AzureKeyVault@2
+          inputs:
+            KeyVaultName: 'gitboard-kv'
+            SecretsFilter: '*'
+            RunAsPreJob: true
+            azureSubscription: 'gitboard-service-connection'
+        - task: UsePythonVersion@0
+          inputs:
+            versionSpec: '$(pythonVersion)'
+          displayName: 'Use Python version'
+
+        - task: AzureWebApp@1
+          displayName: 'Deploy Azure Web App : gitboard'
+          inputs:
+            azureSubscription: 'gitboard-service-connection'
+            appName: $(webAppName)
+            package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
