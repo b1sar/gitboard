@@ -24,7 +24,7 @@ def index(request, *args, **kwargs):
         return redirect("github_login")
 
     token = None
-    token_cache_key = f"{request.user}-token"
+    token_cache_key = f"{request.user.username}-token"
     token_is_cached = token_cache_key in request.session
     if token_is_cached:
         token = request.session.get(token_cache_key)

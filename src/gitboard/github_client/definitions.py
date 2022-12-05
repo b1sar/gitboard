@@ -16,6 +16,7 @@ class GithubUser():
     public_repos: int
     total_private_repos: int
     owned_private_repos: int
+    followers_url: str
 
     def __init__(self, raw_user: dict) -> None:
         self.username = raw_user.get("login", None)
@@ -30,6 +31,7 @@ class GithubUser():
         self.public_repos = raw_user.get("public_repos", -1)
         self.total_private_repos = raw_user.get("total_private_repos", -1)
         self.owned_private_repos = raw_user.get("owned_private_repos", -1)
+        self.followers_url = raw_user.get("followers_url")
 
 
 @dataclass(init=False)
@@ -49,6 +51,7 @@ class Repository():
     default_branch: str
     has_issues: str
     visibility: str
+    stargazers_count: str
 
     def __init__(self, raw_repository: dict) -> Type["Repository"]:
         self.id = raw_repository.get('id', None)
@@ -61,8 +64,9 @@ class Repository():
         self.description = raw_repository.get('description', "No description")
         self.fork = raw_repository.get('fork', None)
         self.url = raw_repository.get('url', None)
-        self.language = raw_repository.get('language', None)
+        self.language = raw_repository.get('language', "Repository does not have a language set")
         self.stargazers_count = raw_repository.get('stargazers_count', None)
         self.default_branch = raw_repository.get('default_branch', None)
         self.has_issues = raw_repository.get('has_issues', None)
         self.visibility = raw_repository.get('visibility', None)
+        self.stargazers_count = raw_repository.get('stargazers_count', None)

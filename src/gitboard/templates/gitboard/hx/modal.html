@@ -6,9 +6,10 @@
 		  <h5 class="modal-title">{{repo_data.name}}</h5>
 		</div>
 		<div class="modal-body">
-          <p>{{repo_data.description}}</p>
+          <p style="font-size: 0.9rem">{{repo_data.description}}</p>
           <p> Language: {{repo_data.language}}</p>
           <a href="{{repo_data.html_url}}">Repo url</a>
+		  <p>Followers: {{repo_data.stargazers_count}}</p>
 		</div>
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
