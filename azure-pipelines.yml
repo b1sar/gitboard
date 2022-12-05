@@ -7,23 +7,11 @@ trigger:
 - main
 
 variables:
-- name: azureServiceConnectionId
-  value: 'gitboard-sc'
-  
-- name: webAppName
-  value: 'gitboard'
-
-- name: vmImageName
-  value: 'ubuntu-latest'
-
-- name: environmentName
-  value: 'gitboard'
+- group: gitboard-common-vg
 
 - name: projectRoot
   value: $(System.DefaultWorkingDirectory)/src
 
-- name: pythonVersion
-  value : '3.10'
 
 stages:
 - stage: Build
