@@ -1,5 +1,6 @@
 import re
 import requests
+from warnings import warn
 from typing import Type, List
 from urllib.parse import urlparse
 
@@ -9,7 +10,7 @@ from gitboard.github_client.definitions import GithubUser, Repository
 
 from gitboard.enums import PageType
 from gitboard.github_client.types import Navigation
-
+from gitboard.github_client.helpers import BearerTokenAuth
 
 class GithubClient():
     GITHUB_BASE_URL = "https://api.github.com/"
@@ -35,7 +36,7 @@ class GithubClient():
 
         resp = requests.get(
             self.GITHUB_BASE_URL + "user",
-            headers=self._get_headers()
+            auth=BearerTokenAuth(self.token),
         )
         cache.set(user_cache_key, resp.json(), 300)
         githubUser = GithubUser(resp.json())
@@ -50,7 +51,7 @@ class GithubClient():
 
         resp = requests.get(
             self.GITHUB_BASE_URL + "repos/" + self.user.username+ "/" + repo_name,
-            headers=self._get_headers(),
+            auth=BearerTokenAuth(self.token),
         )
         raw_repo = resp.json()
         cache.set(repo_cache_key, raw_repo, 30)
@@ -69,7 +70,7 @@ class GithubClient():
         else:  
             resp =  requests.get(
                 self.GITHUB_REPOS_URL,
-                headers=self._get_headers(),
+                auth=BearerTokenAuth(self.token),
                 params= self._get_params(),
             )
             self._update_navigation_params(resp.links)
@@ -86,6 +87,7 @@ class GithubClient():
     
 
     def _get_headers(self) -> dict:
+        warn('This method will deprecate.', FutureWarning, stacklevel=2)
         return {
             "Authorization": f"Bearer {self.token}"
         }
